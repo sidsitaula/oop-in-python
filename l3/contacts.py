@@ -34,15 +34,15 @@ class EmailableContact(Contact, MailSender):
     pass
 
 
-class Friend(Contact):
-    def __init__(self, name, email, phone):
-        super().__init__(name, email)
-        self.phone = phone
-
-
 class AddressHolder:
     def __init__(self, street, city, state, code):
         self.street = street
         self.city = city
         self.state = state
         self.code = code
+
+
+class Friend(Contact):
+    def __init__(self, name, email, phone):
+        super().__init__(name, email)
+        self.phone = phone
