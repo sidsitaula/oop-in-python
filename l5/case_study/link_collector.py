@@ -1,7 +1,7 @@
 from urllib.request import urlopen
 from urllib.parse import urlparse
 import re
-import sys
+from queue import Queue
 LINK_REGEX = re.compile(
     "<a [^>]*href=['\"]([^'\"]+)['\"][^>]*>")
 
@@ -13,20 +13,26 @@ class LinkCollector:
         self.visited_links = set()
 
     def collect_links(self, path="/"):
-        full_url = self.url + path
-        self.visited_links.add(full_url)
-        page = str(urlopen(full_url).read())
-        links = LINK_REGEX.findall(page)
-        links = {self.normalize_url(path, link) for link in links}
-        self.collected_links[full_url] = links
-        for link in links:
-            self.collected_links.setdefault(link, set())
-        unvisited_links = links.difference(
-            self.visited_links)
+        queue = Queue()
+        queue.put(self.url)
 
-        for link in unvisited_links:
-            if link.startswith(self.url):
-                self.collect_links(urlparse(link).path)
+        while not queue.empty():
+
+            full_url = queue.get()
+            print(full_url)
+            self.visited_links.add(full_url)
+            page = str(urlopen(full_url).read())
+            links = LINK_REGEX.findall(page)
+            links = {self.normalize_url(path, link) for link in links}
+            self.collected_links[full_url] = links
+            for link in links:
+                self.collected_links.setdefault(link, set())
+            unvisited_links = links.difference(
+                self.visited_links)
+
+            for link in unvisited_links:
+                if link.startswith(self.url):
+                    queue.put(link)
 
     def normalize_url(self, path, link):
         if link.startswith("http://"):
