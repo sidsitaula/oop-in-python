@@ -51,10 +51,10 @@ class Repeater:
     def __init__(self):
         self.count = 0
 
-    def repeater(self, timer):
+    def __call__(self, timer):
         format_time("{now}: repeat {0}", self.count)
         self.count += 1
-        timer.call_after(5, self.repeater)
+        timer.call_after(5, self)
 
 
 timer = Timer()
@@ -64,7 +64,8 @@ timer.call_after(2, two)
 timer.call_after(4, two)
 timer.call_after(3, three)
 timer.call_after(6, three)
-repeater = Repeater()
-timer.call_after(5, repeater.repeater)
+
+
+timer.call_after(5, Repeater())
 format_time("{now}: Starting", "wabaaaa")
 timer.run()
