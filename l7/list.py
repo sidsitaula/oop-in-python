@@ -2,7 +2,7 @@ initial_list = [1, 2, 3]
 
 
 def duplicate_last(a_list):
-    copy_list = a_list.copy()  # making a copy of the list
+    copy_list = a_list  # making a copy of the list
     last_element = copy_list[-1]
     copy_list.append(last_element)
     return copy_list
