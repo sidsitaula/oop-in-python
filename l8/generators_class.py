@@ -39,3 +39,4 @@ with open('sql.txt', 'r') as inf:
         res_2.append(line)
 
 print(res_1 == res_2)
+print(type(Filter))
